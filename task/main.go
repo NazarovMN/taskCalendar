@@ -19,6 +19,7 @@ func main() {
 		fmt.Println("1. Add the task.")
 		fmt.Println("2. Check your tasks.")
 		fmt.Println("3. Update task")
+		fmt.Println("4.Exit")
 
 		var choice int
 		fmt.Scan(&choice)
@@ -28,9 +29,9 @@ func main() {
 			name := getUserInput("Give task name: ")
 			description := getUserInput("Give the Description: ")
 			status := getUserInput("Give the status: ")
-			date := getUserInput("Name the date(MM-DD-YYYY): ")
+			date := getUserInput("Name the date(DD-MM-YYYY): ")
 
-			dueDate, err := time.Parse(("01-02-2006"), date)
+			dueDate, err := time.Parse(("02-01-2006"), date)
 
 			if err != nil {
 				fmt.Println("cannot parse date format")
@@ -71,12 +72,15 @@ func main() {
 				return
 			}
 
-			fmt.Println(taski)
+			err = taski.ShowAsJson()
+
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
 
 		case 3:
-			var t *task.Task
-
-			task, err := t.ShowTask()
+			task, err := (&task.Task{}).ShowTask()
 
 			if err != nil {
 				fmt.Println(err)
@@ -87,23 +91,24 @@ func main() {
 			fmt.Printf("choose task to update:\n 1)%v\n 2)%v\n 3)%v\n 4)%v\n 5)%v \n", task.Name, task.Description, task.DueDate, task.Priority, task.Status)
 			fmt.Scan(&choice)
 			if choice == 1 {
-				var name string
-				t.UpdateName(name)
+				task.UpdateName()
+
 			} else if choice == 2 {
-				var description string
-				t.UpdateDescription(description)
+				task.UpdateDescription()
 			} else if choice == 3 {
-				var date time.Time
-				t.UpdateDueDate(date)
+				task.UpdateDueDate()
 			} else if choice == 4 {
 				var priority int
-				t.UpdatePriority(priority)
+				task.UpdatePriority(priority)
 
 			} else if choice == 5 {
-				t.UpdateStatus()
+				task.UpdateStatus()
 			} else {
 				fmt.Println("please choose correct one ")
 			}
+		default:
+			fmt.Println("Bye-Bye")
+			return
 
 		}
 	}
